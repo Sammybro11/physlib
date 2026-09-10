@@ -79,3 +79,9 @@ lemma spectralRadiance_pos (c : SpeedOfLight) (ν : ℝ) (T : Temperature)
         div_pos (mul_pos h_pos ν_pos) (mul_pos kB_pos (by exact_mod_cast T_pos))
       exact mul_pos (pow_pos c.val_pos 2)
        (sub_pos.mpr (by simpa using Real.exp_strictMono expo_term))
+
+/-- For a given ν frequency, the spectral radiance of a blackbody is 0 at
+    absolute zero temperature. -/
+lemma spectralRadiance_absZero (c : SpeedOfLight) (ν : ℝ) :
+    spectralRadiance c ν ⟨0⟩ = 0 := by
+    simp [spectralRadiance]
