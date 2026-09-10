@@ -24,7 +24,7 @@ its environment.
 ## i. Overview
 
 According to Planck's distribution law, the spectral energy radiance
-(per unit frequency) for a black body at given temperature `T` as a function of frequence `ν`
+(per unit frequency) for a black body at given temperature `T` as a function of frequency `ν`
  is given by
 
     `B(ν, T) = 2 h ν³ / c² · 1 / (e^{h ν / (k_B T)} - 1)`
