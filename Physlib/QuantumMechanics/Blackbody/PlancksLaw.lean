@@ -36,6 +36,7 @@ where `h` is Planck's constant, `c` the speed of light, and `k_B` the Boltzmann 
 - `spectralRadiance` : The spectral radiance per unit frequency of blackbody radiation.
 - `spectralRadiance_pos` : The spectral radiance is positive for positive frequency
   and temperature.
+- `spectralRadiance_absZero` : The spectral radiance is 0 at absolute zero.
 
 ## iii. Table of contents
 
