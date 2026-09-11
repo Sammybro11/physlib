@@ -50,7 +50,7 @@ where `h` is Planck's constant, `c` the speed of light, and `k_B` the Boltzmann 
 @[expose] public section
 
 
-namespace Constants
+namespace Blackbody
 
 /-!
 ## A. The spectral radiance
@@ -65,14 +65,21 @@ open Constants
 
     By the homogeneity and isotropy of blackbody radiation, the spectral radiance
     is independent of position and direction, so it depends only on frequency
-    and temperature.  -/
+    and temperature.
+
+    Extended by zero outside the physical domain; zero is the unique continuous
+    extension since the Rayleigh–Jeans limit vanishes -/
 noncomputable def spectralRadiance (c : SpeedOfLight) (ν : ℝ) (T : Temperature) : ℝ :=
-    2 * h * ν ^ 3 / ((c : ℝ) ^ 2 * (Real.exp (h * ν / (kB * (T : ℝ))) - 1))
+    if 0 < ν ∧ 0 < (T : ℝ) then
+      2 * h * ν ^ 3 / ((c : ℝ) ^ 2 * (Real.exp (h * ν / (kB * (T : ℝ))) - 1))
+    else 0
 
 /-- The spectral radiance of blackbody radiation is positive for positive frequency
     and positive temperature. -/
 lemma spectralRadiance_pos (c : SpeedOfLight) (ν : ℝ) (T : Temperature)
     (ν_pos : 0 < ν) (T_pos : 0 < T.val) : 0 < spectralRadiance c ν T := by
+    have if_cond : 0 < ν ∧ 0 < (T : ℝ) := ⟨ν_pos, by exact_mod_cast T_pos⟩
+    rw [spectralRadiance, if_pos if_cond]
     refine div_pos ?numerator ?denominator
     · exact mul_pos (mul_pos (by norm_num) h_pos) (pow_pos ν_pos 3)
     · have expo_term : 0 < h * ν / (kB * (T : ℝ)) :=
@@ -80,8 +87,11 @@ lemma spectralRadiance_pos (c : SpeedOfLight) (ν : ℝ) (T : Temperature)
       exact mul_pos (pow_pos c.val_pos 2)
        (sub_pos.mpr (by simpa using Real.exp_strictMono expo_term))
 
-/-- For a given ν frequency, the spectral radiance of a blackbody is 0 at
-    absolute zero temperature. -/
+/-- Explicit promise for Spectral Radiance vanishing at absolute zero Temperature. -/
 lemma spectralRadiance_absZero (c : SpeedOfLight) (ν : ℝ) :
     spectralRadiance c ν ⟨0⟩ = 0 := by
-    simp [spectralRadiance]
+    rw [spectralRadiance, if_neg]
+    rintro ⟨ν_pos, T_zero⟩
+    exact lt_irrefl _ T_zero
+
+end Blackbody
