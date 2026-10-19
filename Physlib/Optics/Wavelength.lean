@@ -49,6 +49,7 @@ has frequency `ν = c / λ`. These two constructions are inverse to one another.
 @[expose] public section
 
 open Dimension
+open scoped NNReal
 
 /-!
 

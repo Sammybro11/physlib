@@ -36,6 +36,7 @@ the dimension of inverse time.
 @[expose] public section
 
 open Dimension
+open scoped NNReal
 
 /-!
 
