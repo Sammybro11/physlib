@@ -32,6 +32,10 @@ has frequency `ν = c / λ`. These two constructions are inverse to one another.
 - `Frequency.ofWavelength_mul` : The relation `ν * λ = c`.
 - `Wavelength.ofFrequency_ofWavelength` and `Frequency.ofWavelength_ofFrequency` : The
   two constructions are inverse to one another.
+- `Wavelength.ofFrequency_scaleUnit` and `Frequency.ofWavelength_scaleUnit` : The
+  constructions commute with changes of units.
+- `speedEqWavelengthMulFrequency_isDimensionallyCorrect` : The relation `c = λ * ν` is
+  dimensionally correct.
 
 ## iii. Table of contents
 
@@ -39,6 +43,7 @@ has frequency `ν = c / λ`. These two constructions are inverse to one another.
 - B. Wavelength from frequency
 - C. Frequency from wavelength
 - D. Round trips
+- E. Dimensional correctness
 
 ## iv. References
 
@@ -50,6 +55,7 @@ has frequency `ν = c / λ`. These two constructions are inverse to one another.
 
 open Dimension
 open scoped NNReal
+open LTMCTUnitChoices UnitDependent
 
 /-!
 
@@ -73,7 +79,7 @@ namespace Wavelength
 
 /-- The wavelength of a wave of frequency `ν` propagating at a speed `c`,
 given by `λ = c / ν`. -/
-def ofFrequency (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency) (hν : 0 < ν.val) :
+noncomputable def ofFrequency (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency) (_ν_pos : 0 < ν.val) :
     Wavelength := ⟨c.val / ν.val⟩
 
 @[simp]
@@ -91,6 +97,24 @@ lemma ofFrequency_mul (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency
     (ofFrequency c ν hν).val * ν.val = c.val :=
   div_mul_cancel₀ c.val (ne_of_gt hν)
 
+/-- Scaling by a change of units preserves positivity of the value of a dimensionful
+quantity. -/
+lemma scaleUnit_val_pos {d : Dimension LTMCTDimensionBase} (m : WithDim d ℝ≥0) (hm : 0 < m.val)
+    (u1 u2 : LTMCTUnitChoices) : 0 < (scaleUnit u1 u2 m).val := by
+  rw [WithDim.scaleUnit_val, smul_eq_mul]
+  exact mul_pos (dimScale_pos u1 u2 d) hm
+
+/-- The wavelength associated with a frequency scales with units as a wavelength should:
+changing the units from `u1` to `u2` rescales the resulting wavelength by the scale factor
+of the dimension of length. -/
+lemma ofFrequency_scaleUnit (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency) (hν : 0 < ν.val)
+    (u1 u2 : LTMCTUnitChoices) :
+    ofFrequency (scaleUnit u1 u2 c) (scaleUnit u1 u2 ν) (scaleUnit_val_pos ν hν u1 u2) =
+      scaleUnit u1 u2 (ofFrequency c ν hν) := by
+  refine WithDim.ext _ _ ?_
+  simp only [ofFrequency_val, WithDim.scaleUnit_val, smul_eq_mul, map_mul]
+  field_simp [dimScale_ne_zero u1 u2 T𝓭⁻¹, hν]
+
 end Wavelength
 
 namespace Frequency
@@ -102,24 +126,36 @@ namespace Frequency
 -/
 
 /-- The frequency of a wave of wavelength `w` propagating at a speed `c`,
-given by `ν = c / λ`. -/
-def ofWavelength (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (hw : 0 < w.val) :
+given by `ν = c / w`. We can't use `λ` due to Lean anon function. -/
+noncomputable def ofWavelength (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (_w_pos : 0 < w.val) :
     Frequency := ⟨c.val / w.val⟩
 
 @[simp]
-lemma ofWavelength_val (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (hw : 0 < w.val) :
-    (ofWavelength c w hw).val = c.val / w.val := rfl
+lemma ofWavelength_val (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (w_pos : 0 < w.val) :
+    (ofWavelength c w w_pos).val = c.val / w.val := rfl
 
 /-- Positivity of the frequency associated with a positive wavelength and a positive
 speed. -/
-lemma ofWavelength_pos (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (hc : 0 < c.val) (w : Wavelength)
+lemma ofWavelength_pos (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (c_pos : 0 < c.val) (w : Wavelength)
     (hw : 0 < w.val) : 0 < (ofWavelength c w hw).val :=
-  div_pos hc hw
+  div_pos c_pos hw
 
 /-- The frequency associated with a wavelength satisfies `ν * λ = c`. -/
-lemma ofWavelength_mul (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (hw : 0 < w.val) :
-    (ofWavelength c w hw).val * w.val = c.val :=
-  div_mul_cancel₀ c.val (ne_of_gt hw)
+lemma ofWavelength_mul (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (w_pos : 0 < w.val) :
+    (ofWavelength c w w_pos).val * w.val = c.val :=
+  div_mul_cancel₀ c.val (ne_of_gt w_pos)
+
+/-- The frequency associated with a wavelength scales with units as a frequency should:
+changing the units from `u1` to `u2` rescales the resulting frequency by the scale factor
+of the dimension of inverse time. -/
+lemma ofWavelength_scaleUnit (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (w_pos : 0 < w.val)
+    (u1 u2 : LTMCTUnitChoices) :
+    ofWavelength (scaleUnit u1 u2 c) (scaleUnit u1 u2 w)
+      (Wavelength.scaleUnit_val_pos w w_pos u1 u2) =
+      scaleUnit u1 u2 (ofWavelength c w w_pos) := by
+  refine WithDim.ext _ _ ?_
+  simp only [ofWavelength_val, WithDim.scaleUnit_val, smul_eq_mul, map_mul]
+  field_simp [dimScale_ne_zero u1 u2 L𝓭, w_pos]
 
 /-!
 
@@ -134,7 +170,7 @@ lemma ofWavelength_ofFrequency (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (hc : 
     ofWavelength c (Wavelength.ofFrequency c ν hν)
       (Wavelength.ofFrequency_pos c hc ν hν) = ν := by
   ext
-  show c.val / (c.val / ν.val) = ν.val
+  simp only [ofWavelength_val, Wavelength.ofFrequency_val, NNReal.coe_div]
   exact div_div_cancel₀ (ne_of_gt hc)
 
 end Frequency
@@ -148,7 +184,26 @@ lemma ofFrequency_ofWavelength (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (hc : 
     ofFrequency c (Frequency.ofWavelength c w hw)
       (Frequency.ofWavelength_pos c hc w hw) = w := by
   ext
-  show c.val / (c.val / w.val) = w.val
+  simp only [ofFrequency_val, Frequency.ofWavelength_val, NNReal.coe_div]
   exact div_div_cancel₀ (ne_of_gt hc)
 
 end Wavelength
+
+/-!
+
+## E. Dimensional correctness
+
+-/
+
+/-- The relation `c = λ * ν` between a speed `c`, a wavelength `λ` and a frequency `ν`,
+stated on real-valued quantities carrying the dimensions of speed, length and inverse time
+respectively. -/
+def SpeedEqWavelengthMulFrequency (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ) (w : WithDim L𝓭 ℝ)
+    (ν : WithDim T𝓭⁻¹ ℝ) : Prop :=
+  c = w * ν
+
+/-- The relation `c = λ * ν` is dimensionally correct: it holds in one system of units if and
+only if it holds in every system of units. -/
+lemma speedEqWavelengthMulFrequency_isDimensionallyCorrect :
+    IsDimensionallyCorrect SpeedEqWavelengthMulFrequency := by
+  simp [funext_iff, SpeedEqWavelengthMulFrequency]
