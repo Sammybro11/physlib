@@ -264,6 +264,13 @@ lemma scaleUnit_val {d : Dimension LTMCTDimensionBase} (M : Type) [MulAction ℝ
     (u1 u2 : LTMCTUnitChoices) (m1 : WithDim d M) :
     (scaleUnit u1 u2 m1).val = u1.dimScale u2 d • m1.val := rfl
 
+/-- Scaling by a change of units preserves positivity of the value of a dimensionful
+quantity. -/
+lemma scaleUnit_val_pos {d : Dimension LTMCTDimensionBase} (m : WithDim d ℝ≥0) (hm : 0 < m.val)
+    (u1 u2 : LTMCTUnitChoices) : 0 < (scaleUnit u1 u2 m).val := by
+  rw [scaleUnit_val, smul_eq_mul]
+  exact mul_pos (LTMCTUnitChoices.dimScale_pos u1 u2 d) hm
+
 /-!
 
 ## Division

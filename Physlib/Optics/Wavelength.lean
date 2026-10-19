@@ -97,19 +97,12 @@ lemma ofFrequency_mul (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency
     (ofFrequency c ν hν).val * ν.val = c.val :=
   div_mul_cancel₀ c.val (ne_of_gt hν)
 
-/-- Scaling by a change of units preserves positivity of the value of a dimensionful
-quantity. -/
-lemma scaleUnit_val_pos {d : Dimension LTMCTDimensionBase} (m : WithDim d ℝ≥0) (hm : 0 < m.val)
-    (u1 u2 : LTMCTUnitChoices) : 0 < (scaleUnit u1 u2 m).val := by
-  rw [WithDim.scaleUnit_val, smul_eq_mul]
-  exact mul_pos (dimScale_pos u1 u2 d) hm
-
 /-- The wavelength associated with a frequency scales with units as a wavelength should:
 changing the units from `u1` to `u2` rescales the resulting wavelength by the scale factor
 of the dimension of length. -/
 lemma ofFrequency_scaleUnit (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (ν : Frequency) (hν : 0 < ν.val)
     (u1 u2 : LTMCTUnitChoices) :
-    ofFrequency (scaleUnit u1 u2 c) (scaleUnit u1 u2 ν) (scaleUnit_val_pos ν hν u1 u2) =
+    ofFrequency (scaleUnit u1 u2 c) (scaleUnit u1 u2 ν) (WithDim.scaleUnit_val_pos ν hν u1 u2) =
       scaleUnit u1 u2 (ofFrequency c ν hν) := by
   refine WithDim.ext _ _ ?_
   simp only [ofFrequency_val, WithDim.scaleUnit_val, smul_eq_mul, map_mul]
@@ -151,7 +144,7 @@ of the dimension of inverse time. -/
 lemma ofWavelength_scaleUnit (c : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0) (w : Wavelength) (w_pos : 0 < w.val)
     (u1 u2 : LTMCTUnitChoices) :
     ofWavelength (scaleUnit u1 u2 c) (scaleUnit u1 u2 w)
-      (Wavelength.scaleUnit_val_pos w w_pos u1 u2) =
+      (WithDim.scaleUnit_val_pos w w_pos u1 u2) =
       scaleUnit u1 u2 (ofWavelength c w w_pos) := by
   refine WithDim.ext _ _ ?_
   simp only [ofWavelength_val, WithDim.scaleUnit_val, smul_eq_mul, map_mul]
