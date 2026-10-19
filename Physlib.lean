@@ -195,7 +195,9 @@ public import Physlib.Meta.TODO.Basic
 public import Physlib.Meta.TODO.Global
 public import Physlib.Meta.TransverseTactics
 public import Physlib.Optics.Basic
+public import Physlib.Optics.Frequency
 public import Physlib.Optics.Polarization.Basic
+public import Physlib.Optics.Wavelength
 public import Physlib.Particles.BeyondTheStandardModel.GeorgiGlashow.Basic
 public import Physlib.Particles.BeyondTheStandardModel.PatiSalam.Basic
 public import Physlib.Particles.BeyondTheStandardModel.RHN.AnomalyCancellation.Basic
