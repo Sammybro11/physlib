@@ -1,11 +1,12 @@
 /-
 Copyright (c) 2024 Joseph Tooby-Smith. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Joseph Tooby-Smith
+Authors: Joseph Tooby-Smith, Samyak Rai
 -/
 module
 
 public import Mathlib.Basic.Real.Basic
+public import Physlib.Units.WithDim.Basic
 /-!
 
 # The Speed of Light
@@ -19,6 +20,8 @@ and should be thought of as the speed of light in some chosen but arbitrary syst
 ## ii. Key results
 
 - `SpeedOfLight` : The type of speeds of light in a vacuum.
+- `SpeedOfLight.toWithDim` : The speed of light as a quantity with the dimension of
+  length over time.
 
 ## iii. Table of contents
 
@@ -26,6 +29,7 @@ and should be thought of as the speed of light in some chosen but arbitrary syst
 - B. Instances on the type
 - C. The instance of one
 - D. Positivity properties
+- E. As a dimensioned quantity
 
 ## iv. References
 
@@ -33,6 +37,9 @@ and should be thought of as the speed of light in some chosen but arbitrary syst
 -/
 
 @[expose] public section
+
+open Dimension
+open scoped NNReal
 
 /-!
 
@@ -85,5 +92,26 @@ lemma val_nonneg (c : SpeedOfLight) : 0 ≤ (c : ℝ) := le_of_lt c.pos
 
 @[simp]
 lemma val_ne_zero (c : SpeedOfLight) : (c : ℝ) ≠ 0 := ne_of_gt c.pos
+
+/-!
+
+## E. As a dimensioned quantity
+
+-/
+
+/-- The speed of light as a quantity carrying the dimension of length over time,
+in nonnegative real values. The underlying value is the same as that of the
+`SpeedOfLight`. -/
+def toWithDim (c : SpeedOfLight) : WithDim (L𝓭 * T𝓭⁻¹) ℝ≥0 := ⟨⟨c.val, le_of_lt c.pos⟩⟩
+
+/-- The underlying value of the speed of light as a dimensioned quantity agrees with
+the original value. -/
+@[simp]
+lemma toWithDim_val (c : SpeedOfLight) : (c.toWithDim.val : ℝ) = c.val := rfl
+
+/-- The speed of light as a dimensioned quantity is positive. -/
+@[simp]
+lemma toWithDim_val_pos (c : SpeedOfLight) : 0 < c.toWithDim.val :=
+  NNReal.coe_pos.mp c.val_pos
 
 end SpeedOfLight
