@@ -5,8 +5,8 @@ Authors: Daniel Leonforte
 -/
 module
 
-public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.AngularMomentum
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.TensorDecomposition
+public import PhyslibAlpha.QuantumMechanics.AngularMomentum.Basic
 
 /-!
 # Addition of angular momenta

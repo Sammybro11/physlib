@@ -97,8 +97,10 @@ public import PhyslibAlpha.ClassicalFieldTheory.Local.TotalDerivative
 public import PhyslibAlpha.ClassicalFieldTheory.Local.TotalDivergence
 public import PhyslibAlpha.ClassicalFieldTheory.Local.TotalDivergenceEquivalence
 public import PhyslibAlpha.ClassicalFieldTheory.Local.Variation
+public import PhyslibAlpha.ClassicalMechanics.CentralForce.AngularMomentum
 public import PhyslibAlpha.ClassicalMechanics.CentralForce.Basic
 public import PhyslibAlpha.ClassicalMechanics.CoupledSpringPotential
+public import PhyslibAlpha.ClassicalMechanics.LiouvilleIntegrable.Basic
 public import PhyslibAlpha.ClassicalMechanics.MomentMap.Basic
 public import PhyslibAlpha.ClassicalMechanics.MomentMap.Cohomology
 public import PhyslibAlpha.ClassicalMechanics.MomentMap.GalileanMass
@@ -226,16 +228,16 @@ public import PhyslibAlpha.Mathematics.PolynomialEval
 public import PhyslibAlpha.Mathematics.Probability.Kernel.Factorization
 public import PhyslibAlpha.Mathematics.RepresentationDual
 public import PhyslibAlpha.Mathematics.RepresentationProdMap
-public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.AngularMomentum
-public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.AngularMomentumAddition
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.Basic
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.BivariateBasis
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.Classification
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.ClebschGordan
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.CommutingActions
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.Construction
+public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.Schur
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.TensorDecomposition
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.TensorHighestWeight
+public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.TensorIntertwiner
 public import PhyslibAlpha.Mathematics.RepresentationTheory.Sl2.Weights
 public import PhyslibAlpha.Mathematics.SubalgebraRestriction
 public import PhyslibAlpha.Mathematics.Sublinear
@@ -618,6 +620,7 @@ public import PhyslibAlpha.ProbabilisticTheory.Representation.StructureFactor
 public import PhyslibAlpha.ProbabilisticTheory.Representation.VectorMeasure
 public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.ComplexExtension
 public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.CovarianceForm
+public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.CovarianceFormUnitalMap
 public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.GNS
 public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.Invariant
 public import PhyslibAlpha.ProbabilisticTheory.StarAlgebra.Jordan
@@ -651,6 +654,8 @@ public import PhyslibAlpha.ProbabilisticTheory.WStarAlgebra.TracePairingSurjecti
 public import PhyslibAlpha.ProbabilisticTheory.Weight.Basic
 public import PhyslibAlpha.ProbabilisticTheory.Weight.Continuous
 public import PhyslibAlpha.ProbabilisticTheory.Weight.Extension
+public import PhyslibAlpha.QuantumMechanics.AngularMomentum.Addition
+public import PhyslibAlpha.QuantumMechanics.AngularMomentum.Basic
 public import PhyslibAlpha.QuantumMechanics.Blackbody.RayleighJeans
 public import PhyslibAlpha.QuantumMechanics.HarmonicOscillator.LadderSystem
 public import PhyslibAlpha.QuantumMechanics.HarmonicOscillator.Vacuum

@@ -281,6 +281,7 @@ public import Physlib.ProbabilisticTheory.Effect.Convex
 public import Physlib.ProbabilisticTheory.Effect.Metric
 public import Physlib.ProbabilisticTheory.Effect.Sharp
 public import Physlib.ProbabilisticTheory.LocalNet.Basic
+public import Physlib.ProbabilisticTheory.LocalNet.QuasilocalOrder
 public import Physlib.ProbabilisticTheory.OrderUnit.Archimedean
 public import Physlib.ProbabilisticTheory.OrderUnit.Basic
 public import Physlib.ProbabilisticTheory.OrderUnit.Cone
@@ -612,6 +613,7 @@ public import Physlib.Thermodynamics.IdealGas.Basic
 public import Physlib.Thermodynamics.Temperature.Basic
 public import Physlib.Thermodynamics.Temperature.TemperatureUnits
 public import Physlib.Units.Basic
+public import Physlib.Units.Constants
 public import Physlib.Units.Dimension
 public import Physlib.Units.Examples
 public import Physlib.Units.Exponent
