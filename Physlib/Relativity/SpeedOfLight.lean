@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2024 Joseph Tooby-Smith. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Joseph Tooby-Smith, Samyak Rai
+Authors: Samyak Rai, Joseph Tooby-Smith
 -/
 module
 
@@ -22,6 +22,7 @@ and should be thought of as the speed of light in some chosen but arbitrary syst
 - `SpeedOfLight` : The type of speeds of light in a vacuum.
 - `SpeedOfLight.toWithDim` : The speed of light as a quantity with the dimension of
   length over time.
+- `SpeedOfLight.toWithDim_scaleUnit` : The map `toWithDim` commutes with changes of units.
 
 ## iii. Table of contents
 
@@ -38,7 +39,7 @@ and should be thought of as the speed of light in some chosen but arbitrary syst
 
 @[expose] public section
 
-open Dimension
+open Dimension UnitDependent
 open scoped NNReal
 
 /-!
@@ -113,5 +114,40 @@ lemma toWithDim_val (c : SpeedOfLight) : (c.toWithDim.val : ℝ) = c.val := rfl
 @[simp]
 lemma toWithDim_val_pos (c : SpeedOfLight) : 0 < c.toWithDim.val :=
   NNReal.coe_pos.mp c.val_pos
+
+/-- Two speeds of light with the same underlying value are equal. -/
+lemma ext_val {c1 c2 : SpeedOfLight} (h : c1.val = c2.val) : c1 = c2 := by
+  cases c1; cases c2; subst h; rfl
+
+/-- The speed of light scales under a change of units by the scale factor of the
+  dimension of length over time. -/
+noncomputable instance : UnitDependent SpeedOfLight where
+  scaleUnit u1 u2 c :=
+    ⟨(u1.dimScale u2 (L𝓭 * T𝓭⁻¹) : ℝ) * c.val,
+      mul_pos (NNReal.coe_pos.mpr (LTMCTUnitChoices.dimScale_pos u1 u2 (L𝓭 * T𝓭⁻¹))) c.pos⟩
+  scaleUnit_trans u1 u2 u3 c := ext_val (by
+    show (u2.dimScale u3 (L𝓭 * T𝓭⁻¹) : ℝ) * ((u1.dimScale u2 (L𝓭 * T𝓭⁻¹) : ℝ) * c.val) = _
+    rw [← mul_assoc, ← NNReal.coe_mul, mul_comm (u2.dimScale u3 (L𝓭 * T𝓭⁻¹)),
+      LTMCTUnitChoices.dimScale_transitive])
+  scaleUnit_trans' u1 u2 u3 c := ext_val (by
+    show (u1.dimScale u2 (L𝓭 * T𝓭⁻¹) : ℝ) * ((u2.dimScale u3 (L𝓭 * T𝓭⁻¹) : ℝ) * c.val) = _
+    rw [← mul_assoc, ← NNReal.coe_mul, LTMCTUnitChoices.dimScale_transitive])
+  scaleUnit_id u c := ext_val (by
+    show (u.dimScale u (L𝓭 * T𝓭⁻¹) : ℝ) * c.val = c.val
+    rw [LTMCTUnitChoices.dimScale_self, NNReal.coe_one, one_mul])
+
+/-- Scaling a speed of light multiplies its value by the scale factor of the
+  dimension of length over time. -/
+@[simp]
+lemma scaleUnit_val (c : SpeedOfLight) (u1 u2 : LTMCTUnitChoices) :
+    (scaleUnit u1 u2 c).val = (u1.dimScale u2 (L𝓭 * T𝓭⁻¹) : ℝ) * c.val := rfl
+
+/-- The map `toWithDim` commutes with changes of units. -/
+@[simp]
+lemma toWithDim_scaleUnit (c : SpeedOfLight) (u1 u2 : LTMCTUnitChoices) :
+    (scaleUnit u1 u2 c).toWithDim = scaleUnit u1 u2 c.toWithDim := by
+  refine WithDim.ext _ _ ?_
+  simp only [toWithDim, WithDim.scaleUnit_val, scaleUnit_val]
+  exact Subtype.ext rfl
 
 end SpeedOfLight
